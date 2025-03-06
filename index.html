@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="src/style.css" />
+        <title>한/영 타자 변환기</title>
+    </head>
+    <body>
+        <h1>한/영 타자 변환기</h1>
+        <div class="content">
+            <!-- <label for="inputText">변환할 문구를 입력하세요.</label> -->
+
+            <div class="convertChoices">
+                <label for="korToEng">
+                    <input
+                        type="radio"
+                        name="convertChoice"
+                        id="korToEng"
+                        checked
+                    />한글→영문
+                </label>
+                <label for="engToKor">
+                    <input
+                        type="radio"
+                        name="convertChoice"
+                        id="engToKor"
+                    />영문→한글
+                </label>
+            </div>
+
+            <form>
+                <div class="resetContent">
+                    <button type="reset" class="resetButton">초기화</button>
+                </div>
+                <textarea
+                    id="inputText"
+                    class="textBox"
+                    placeholder="예시: dkssudgktpdy / 해ㅐㅇ ㅡㅐ구ㅑㅜㅎ"
+                    maxlength="1000"
+                    autocomplete="off"
+                    autofocus
+                ></textarea>
+            </form>
+        </div>
+        <div class="content">
+            <div class="labelArea">
+                <label for="outputText">결과</label>
+            </div>
+            <textarea id="outputText" class="textBox" readonly></textarea>
+        </div>
+        <script src="src/script.js"></script>
+    </body>
+</html>
