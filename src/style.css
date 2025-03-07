@@ -18,6 +18,7 @@ h1 {
 
 .content {
     width: 80%;
+    max-width: 800px;
     align-self: center;
     padding-top: 20px;
 }
@@ -63,12 +64,12 @@ input[type='radio']:checked + label {
 }
 
 .resetButton {
-    border: none;
-    padding: 4px 4px;
     font-size: 12px;
     font-weight: 600;
     color: #888;
-    border-radius: 4px;
+    padding: 4px 8px;
+    border: none;
+    border-radius: 8px;
     transition-duration: 0.2s;
 }
 
@@ -84,8 +85,8 @@ input[type='radio']:checked + label {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    resize: none;
     box-sizing: border-box;
+    resize: none;
     outline: none;
 }
 
