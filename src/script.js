@@ -198,5 +198,15 @@ function mapToKey(decomp) {
 
 function engToKor() {
 	const input = inputText.value;
-	return input;
+	let result = "";
+	for (let i = 0; i < input.length; i++) {
+		let engIndex = engKey.indexOf(input[i]);
+		if (engIndex > -1)
+			result += korKey[engKey.indexOf(input[i])];
+		else
+			result += input[i];
+	}
+	console.log(result);
+
+	return result;
 }
