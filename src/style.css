@@ -14,7 +14,6 @@ body {
 
 h1 {
     text-align: center;
-    display: block;
 }
 
 .content {
@@ -30,11 +29,18 @@ label {
     padding-bottom: 8px;
 }
 
+.controlArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 8px;
+}
+
 .convertChoices {
     display: flex;
     justify-content: center;
     gap: 8px;
-    padding-bottom: 16px;
 }
 
 input[type='radio'] {
@@ -54,12 +60,6 @@ label.convertChoice {
 input[type='radio']:checked + label {
     background-color: cadetblue;
     color: white;
-}
-
-.resetContent {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 8px;
 }
 
 .resetButton {

@@ -11,37 +11,50 @@
         <div class="content">
             <!-- <label for="inputText">변환할 문구를 입력하세요.</label> -->
 
-            <div class="convertChoices">
-                <input
-                    type="radio"
-                    name="convertChoice"
-                    id="korToEng"
-                    checked
-                />
-                <label for="korToEng" class="convertChoice">가나다 → ABC</label>
-                <input type="radio" name="convertChoice" id="engToKor" />
-                <label for="engToKor" class="convertChoice">ABC → 가나다</label>
-            </div>
-
-            <form>
-                <div class="resetContent">
-                    <button type="reset" class="resetButton">초기화</button>
+            <div class="controlArea">
+                <div class="convertChoices">
+                    <input
+                        type="radio"
+                        name="convertRadio"
+                        class="convertRadio"
+                        id="korToEng"
+                        checked
+                    />
+                    <label for="korToEng" class="convertChoice"
+                        >가나다 → ABC</label
+                    >
+                    <input
+                        type="radio"
+                        name="convertRadio"
+                        class="convertRadio"
+                        id="engToKor"
+                    />
+                    <label for="engToKor" class="convertChoice"
+                        >ABC → 가나다</label
+                    >
                 </div>
-                <textarea
-                    id="inputText"
-                    class="textBox"
-                    placeholder="예시: dkssudgktpdy / 해ㅐㅇ ㅡㅐ구ㅑㅜㅎ"
-                    maxlength="1000"
-                    autocomplete="off"
-                    autofocus
-                ></textarea>
-            </form>
+
+                <button class="resetButton">초기화</button>
+            </div>
+            <textarea
+                id="inputText"
+                class="textBox"
+                placeholder="예시: dkssudgktpdy / 해ㅐㅇ ㅡㅐ구ㅑㅜㅎ"
+                maxlength="1000"
+                autocomplete="off"
+                autofocus
+            ></textarea>
         </div>
         <div class="content">
             <div class="labelArea">
                 <label for="outputText">결과</label>
             </div>
-            <textarea id="outputText" class="textBox" readonly></textarea>
+            <textarea
+                id="outputText"
+                class="textBox"
+                placeholder="당신이 적으려던 것은..."
+                readonly
+            ></textarea>
         </div>
         <script src="src/script.js"></script>
     </body>
