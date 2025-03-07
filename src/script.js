@@ -19,8 +19,8 @@ const vList = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ";
 const tList = "ㄱㄲᆪㄴᆬᆭㄷㄹᆰᆱᆲᆳᆴᆵᆶㅁㅂᆹㅅㅆㅇㅈㅊㅋㅌㅍㅎ";
 
 // 어차피 index를 구하기 때문에 유니코드 자체가 중요하지 않음
-const korKey = "ㅂㅃㅈㅉㄷㄸㄱㄲㅅㅆㅛㅕㅑㅐㅒㅔㅖㅁㄴㅇㄹㅎㅗㅓㅏㅣㅋㅌㅊㅍㅠㅜㅡ";
-const engKey = "qQwWeErRtTyuioOpPasdfghjklzxcvbnm";
+const korKey = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅛㅜㅠㅡㅣ";
+const engKey = "rRseEfaqQtTdwWczxvgkoiOjpuPhynbml";
 
 radioButtons.forEach(radio => { radio.addEventListener('change', convertText); });
 inputText.addEventListener('input', convertText);
