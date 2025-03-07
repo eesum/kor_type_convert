@@ -47,10 +47,10 @@ function korToEng() {
 	const input = inputText.value;
 	let result = "";
 
-	let char;
+	let syllable;
 	for (let i = 0; i < input.length; i++) {
-		char = input.codePointAt(i);
-		console.log(char.toString(16));
+		syllable = input.codePointAt(i);
+		console.log(syllable.toString(16));
 
 		let decomp = [-1, -1, -1, -1, -1];
 		let lIndex = lList.indexOf(input[i]);
@@ -58,16 +58,16 @@ function korToEng() {
 		let tIndex = tList.indexOf(input[i]);
 		console.log(lIndex, vIndex, tIndex);
 
-		if (char >= sBase && char < sBase + sCount) {
+		if (syllable >= sBase && syllable < sBase + sCount) {
 			console.log(input[i] + ' is 한글 syllable');
 			//몇번째 음절인가
-			char -= sBase;
+			syllable -= sBase;
 			//lindex 구하고
-			decomp[0] = Math.floor(char / nCount);
+			decomp[0] = Math.floor(syllable / nCount);
 			//vIndex 구하고
-			decomp[1] = Math.floor((char % nCount) / tCount);
+			decomp[1] = Math.floor((syllable % nCount) / tCount);
 			//tIndex 구하고 -> 0이면 없는 거니까 index 계산 시 1 빼줘야 함
-			decomp[3] = (char % tCount) - 1;
+			decomp[3] = (syllable % tCount) - 1;
 			console.log(decomp[3]);
 			if (!decomp[3]) { decomp[3] = -1; }
 		} else if (lIndex > -1) {
