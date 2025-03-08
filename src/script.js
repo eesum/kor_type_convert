@@ -62,7 +62,7 @@ function korToEng() {
 			console.log(input[i] + ' is 한글 syllable');
 			//몇번째 음절인가
 			syllable -= sBase;
-			//lindex 구하고
+			//lIndex 구하고
 			decomp[0] = Math.floor(syllable / nCount);
 			//vIndex 구하고
 			decomp[1] = Math.floor((syllable % nCount) / tCount);
@@ -199,13 +199,40 @@ function mapToKey(decomp) {
 function engToKor() {
 	const input = inputText.value;
 	let result = "";
+	let decomposed = "";
 	for (let i = 0; i < input.length; i++) {
 		let engIndex = engKey.indexOf(input[i]);
 		if (engIndex > -1)
-			result += korKey[engKey.indexOf(input[i])];
+			decomposed += korKey[engKey.indexOf(input[i])];
 		else
-			result += input[i];
+			decomposed += input[i];
 	}
+
+	let comp = [];
+	comp.length = decomposed.length;
+
+	for (let i = 1; i < decomposed.length; i++) {
+		// let lIndex = lList.indexOf(decomposed[i]);
+		let vIndex = vList.indexOf(decomposed[i]);
+		// let tIndex = tList.indexOf(decomposed[i]);
+
+		if (vIndex > -1) {
+			let lIndex = lList.indexOf(decomposed[i - 1]);
+			if (lIndex > -1) {
+				comp[i - 1] = 1;
+				//초성
+				comp[i] = 2;
+				//중성
+			} else {
+				comp[i] = -2;
+				//버려진 중성
+			}
+			i++;
+		}
+	}
+
+
+
 	console.log(result);
 
 	return result;
