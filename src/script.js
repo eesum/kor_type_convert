@@ -210,62 +210,203 @@ function engToKor() {
 	const input = inputText.value;
 	let result = "";
 
-	let lvt = [{ l: -1, v: -1, t: -1 }];
+	let lvt = { l: -1, v: -1, t: -1 };
 
 	for (let i = 0; i < input.length; i++) {
 		let keyIndex = engKey.indexOf(input[i]);
+		console.log(keyIndex);
 		let char = korKey[keyIndex];
 		if (keyIndex == -1) {
 			//현재 상태에서 한번 구워주고 초기화
+			result += composeAndPrint(lvt);
 			result += input[i];
 		} else if (keyIndex < 19) { // 자음
+			tempL = lList.indexOf(char);
+			console.log('lIndex: ' + tempL);
 			if (lvt.l == -1) {
 				if (lvt.v == -1) {
 					// -1,-1,-1
-					lvt.l = lList.indexOf(char);
+					lvt.l = tempL;
 				} else {
 					// v
 					// 한번 구워주고 초기화
-					lvt.l = lList.indexOf(char);
+					result += composeAndPrint(lvt);
+					lvt.l = tempL;
 				}
 			} else if (lvt.v == -1) {
 				// l
 				// 기존 걸로 구워주고 초기화
-				// 지금 걸로 구워주고 초기화
+				result += composeAndPrint(lvt);
+				// l 남기기
+				lvt.l = tempL;
 			} else if (lvt.t == -1) {
 				// lv
-				lvt.t = tList.indexOf(char);
+				// t가 될 수 있나
+				// 있으면 넣고
+				// 아니면 구워주고 초기화
+				// l 남기기
+				let tempT = tList.indexOf(char);
+				if (tempT > -1)
+					lvt.t = tempT;
+				else {
+					result += composeAndPrint(lvt);
+					lvt.l = tempL;
+				}
 			} else {
 				// lvt
-				// 기존 t와 연결되나
+				// 기존 t와 연결되나 (ㄱ0-ㅅ18,ㄴ3-ㅈ21/ㅎ26,ㄹ7-ㄱ0/ㅁ15/ㅂ16/ㅅ18/ㅌ24/ㅍ25/ㅎ26,ㅂ16-ㅅ18)
+				// 2, 4, 5, 8, 9, 10, 11, 12, 13, 14, 17
+				let tempT = tList.indexOf(char);
+				if (lvt.t == 0 && tempT == 18) {
+					lvt.t = 2;
+				} //ㄱㅅ
+				else if (lvt.t == 3 && tempT == 21) {
+					lvt.t = 4;
+				}  //ㄴㅈ
+				else if (lvt.t == 3 && tempT == 26) {
+					lvt.t = 5;
+				}  //ㄴㅎ
+				else if (lvt.t == 7 && tempT == 0) {
+					lvt.t = 8;
+				}   //ㄹㄱ
+				else if (lvt.t == 7 && tempT == 15) {
+					lvt.t = 9;
+				}  //ㄹㅁ
+				else if (lvt.t == 7 && tempT == 16) {
+					lvt.t = 10;
+				}  //ㄹㅂ
+				else if (lvt.t == 7 && tempT == 18) {
+					lvt.t = 11;
+				}  //ㄹㅅ
+				else if (lvt.t == 7 && tempT == 24) {
+					lvt.t = 12;
+				}  //ㄹㅌ
+				else if (lvt.t == 7 && tempT == 25) {
+					lvt.t = 13;
+				}  //ㄹㅍ
+				else if (lvt.t == 7 && tempT == 26) {
+					lvt.t = 14;
+				}  //ㄹㅎ
+				else if (lvt.t == 16 && tempT == 18) {
+					lvt.t = 17;
+				}  //ㅂㅅ
+				else {
+					result += composeAndPrint(lvt);
+					lvt.l = lList.indexOf(tList[tempT]);
+				}
 				// 되면 lvtt
 				// 안되면 구워주고 초기화
 				// l로 남기기
 			}
 		} else { // 모음
+			tempV = vList.indexOf(char);
 			if (lvt.l == -1) {
 				if (lvt.v == -1) {
 					// -1,-1,-1
-					// 한번 구워주고 초기화
+					// v남기기
+					lvt.v = tempV;
 				} else {
 					// v
-					// vv 연결되나
+					// vv 연결되나 (ㅗ8-ㅏ0/ㅐ1/ㅣ20, ㅜ13-ㅓ4/ㅔ5/ㅣ20, ㅡ18-ㅣ20)
+					let vLeft = 0;
+					if (lvt.v == 8 && tempV == 0)
+						lvt.v = 9;
+					else if (lvt.v == 8 && tempV == 1)
+						lvt.v = 10;
+					else if (lvt.v == 8 && tempV == 20)
+						lvt.v = 11;
+					else if (lvt.v == 13 && tempV == 4)
+						lvt.v = 14;
+					else if (lvt.v == 13 && tempV == 5)
+						lvt.v = 15;
+					else if (lvt.v == 13 && tempV == 20)
+						lvt.v = 16;
+					else if (lvt.v == 18 && tempV == 20)
+						lvt.v = 19;
+					else
+						vLeft = 1;
 					// 되면 구워주고 초기화
 					// 안되면 구워주고 초기화
 					// 새 v 남기기
+					result += composeAndPrint(lvt);
+					if (vLeft == 1) {
+						lvt.v = tempV;
+					}
 				}
 			} else if (lvt.v == -1) {
 				// l
-				lvt.v = vList.indexOf(char);
+				lvt.v = tempV;
 			} else if (lvt.t == -1) {
 				// lv
 				// vv 연결되나
+				if (lvt.v == 8 && tempV == 0)
+					lvt.v = 9;
+				else if (lvt.v == 8 && tempV == 1)
+					lvt.v = 10;
+				else if (lvt.v == 8 && tempV == 20)
+					lvt.v = 11;
+				else if (lvt.v == 13 && tempV == 4)
+					lvt.v = 14;
+				else if (lvt.v == 13 && tempV == 5)
+					lvt.v = 15;
+				else if (lvt.v == 13 && tempV == 20)
+					lvt.v = 16;
+				else if (lvt.v == 18 && tempV == 20)
+					lvt.v = 19;
+				else {
+					result += composeAndPrint(lvt);
+					lvt.v = tempV;
+				}
 				// 되면 lvv 남기고
 				// 안되면 lv 구워주고 초기화
 				// 새 v남기기
 			} else {
 				// lvt
-				// tt로 분해되나
+				// tt로 분해되나 (ㄱ0-ㅅ18,ㄴ3-ㅈ21/ㅎ26,ㄹ7-ㄱ0/ㅁ15/ㅂ16/ㅅ18/ㅌ24/ㅍ25/ㅎ26,ㅂ16-ㅅ18)
+				// ㄱㅅ2, ㄴㅈ4, ㄴㅎ5, ㄹㄱ8, ㄹㅁ9, ㄹㅂ10, ㄹㅅ11, ㄹㅌ12, ㄹㅍ13, ㄹㅎ14, ㅂㅅ17
+				let tempL;
+				if (lvt.t == 2) { //ㄱㅅ
+					lvt.t = 0;
+					tempL = 18;
+				} else if (lvt.t == 4) { //ㄴㅈ
+					lvt.t = 3;
+					tempL = 21;
+				} else if (lvt.t == 5) { //ㄴㅎ
+					lvt.t = 3;
+					tempL = 26;
+				} else if (lvt.t == 8) { //ㄹㄱ
+					lvt.t = 7;
+					tempL = 0;
+				} else if (lvt.t == 9) { //ㄹㅁ
+					lvt.t = 7;
+					tempL = 15;
+				} else if (lvt.t == 10) { //ㄹㅂ
+					lvt.t = 7;
+					tempL = 16;
+				} else if (lvt.t == 11) { //ㄹㅅ
+					lvt.t = 7;
+					tempL = 18;
+				} else if (lvt.t == 12) { //ㄹㅌ
+					lvt.t = 7;
+					tempL = 24;
+				} else if (lvt.t == 13) { //ㄹㅍ
+					lvt.t = 7;
+					tempL = 25;
+				} else if (lvt.t == 14) { //ㄹㅎ
+					lvt.t = 7;
+					tempL = 26;
+				} else if (lvt.t == 17) { //ㅂㅅ
+					tempL = 18;
+					lvt.t = 16;
+				} else {
+					tempL = lvt.t;
+					lvt.t = -1;
+				}
+				result += composeAndPrint(lvt);
+				lvt.l = lList.indexOf(tList[tempL]);
+				lvt.v = tempV;
+
+
 				// 분해되면 lvt 구워주고 초기화
 				// lv남기기
 				// 분해 안되면 lv 구워주고 초기화
@@ -273,23 +414,32 @@ function engToKor() {
 			}
 		}
 
-		console.log(result);
 
-		return result;
 	}
+	result += composeAndPrint(lvt);
+	console.log(result);
+	return result;
 }
 
 function composeAndPrint(lvt) {
-	let result;
-	if (lvt.l > -1 && lvt.v > -1 && lvt.t > -1) {
-		let syllable = sBase + (lvt.l * nCount) + (lvt[1] * tCount) + lvt[2];
+	let result = "";
+	console.log('compose ' + lvt.l, lvt.v, lvt.t);
+	if (lvt.l > -1 && lvt.v > -1) {
+		let syllable = sBase + (lvt.l * nCount) + (lvt.v * tCount) + lvt.t + 1;
+		console.log('syllable code: ' + syllable);
 		result = String.fromCodePoint(syllable);
-	} else if (lvt.v == -1) {
-		result = korKey.indexOf(lList[lvt.l]);
-	} else if (lvt.l == -1) {
-		result = korKey.indexOf(vList[lvt.v]);
+	} else if (lvt.l > -1 && lvt.v == -1) {
+		console.log('only l: ' + lvt.l);
+		result = lList[lvt.l];
+	} else if (lvt.l == -1 && lvt.v > -1) {
+		console.log('only v: ' + lvt.v);
+		result = vList[lvt.v];
 	}
 
-	lvt = [{ l: -1, v: -1, t: -1 }];
+	lvt.l = -1;
+	lvt.v = -1;
+	lvt.t = -1;
+
+	// console.log('reset after compose ' + lvt.l, lvt.v, lvt.t);
 	return result;
 }
