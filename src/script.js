@@ -4,9 +4,6 @@ const outputText = document.getElementById('outputText');
 const resetButton = document.querySelector('.resetButton');
 
 const sBase = 0xAC00; // 음절 기준점
-// const lBase = 0x1100; // 초성 기준점
-// const vBase = 0x1161; // 중성 기준점
-// const tBase = 0x11A7; // 종성 기준점 (종성이 없는 경우를 고려해 하나 아래로 기준 삼음)
 
 const lCount = 19; // 초성 개수
 const vCount = 21; // 중성 개수
@@ -17,8 +14,6 @@ const sCount = 11172; // 초성 * nCount (전체 음절 조합 경우의 수, AC
 const lList = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
 const vList = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ";
 const tList = "ㄱㄲᆪㄴᆬᆭㄷㄹᆰᆱᆲᆳᆴᆵᆶㅁㅂᆹㅅㅆㅇㅈㅊㅋㅌㅍㅎ";
-
-// 어차피 index를 구하기 때문에 유니코드 자체가 중요하지 않음
 const korKey = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅛㅜㅠㅡㅣ";
 const engKey = "rRseEfaqQtTdwWczxvgkoiOjpuPhynbml";
 
@@ -217,7 +212,6 @@ function engToKor() {
 		console.log(keyIndex);
 		let char = korKey[keyIndex];
 		if (keyIndex == -1) {
-			//현재 상태에서 한번 구워주고 초기화
 			result += composeAndPrint(lvt);
 			result += input[i];
 		} else if (keyIndex < 19) { // 자음
@@ -229,22 +223,15 @@ function engToKor() {
 					lvt.l = tempL;
 				} else {
 					// v
-					// 한번 구워주고 초기화
 					result += composeAndPrint(lvt);
 					lvt.l = tempL;
 				}
 			} else if (lvt.v == -1) {
 				// l
-				// 기존 걸로 구워주고 초기화
 				result += composeAndPrint(lvt);
-				// l 남기기
 				lvt.l = tempL;
 			} else if (lvt.t == -1) {
 				// lv
-				// t가 될 수 있나
-				// 있으면 넣고
-				// 아니면 구워주고 초기화
-				// l 남기기
 				let tempT = tList.indexOf(char);
 				if (tempT > -1)
 					lvt.t = tempT;
@@ -254,80 +241,61 @@ function engToKor() {
 				}
 			} else {
 				// lvt
-				// 기존 t와 연결되나 (ㄱ0-ㅅ18,ㄴ3-ㅈ21/ㅎ26,ㄹ7-ㄱ0/ㅁ15/ㅂ16/ㅅ18/ㅌ24/ㅍ25/ㅎ26,ㅂ16-ㅅ18)
-				// 2, 4, 5, 8, 9, 10, 11, 12, 13, 14, 17
+				// 이중받침 확인
 				let tempT = tList.indexOf(char);
-				if (lvt.t == 0 && tempT == 18) {
+				if (lvt.t == 0 && tempT == 18) { //ㄱㅅ
 					lvt.t = 2;
-				} //ㄱㅅ
-				else if (lvt.t == 3 && tempT == 21) {
+				} else if (lvt.t == 3 && tempT == 21) { //ㄴㅈ
 					lvt.t = 4;
-				}  //ㄴㅈ
-				else if (lvt.t == 3 && tempT == 26) {
+				} else if (lvt.t == 3 && tempT == 26) { //ㄴㅎ
 					lvt.t = 5;
-				}  //ㄴㅎ
-				else if (lvt.t == 7 && tempT == 0) {
+				} else if (lvt.t == 7 && tempT == 0) { //ㄹㄱ
 					lvt.t = 8;
-				}   //ㄹㄱ
-				else if (lvt.t == 7 && tempT == 15) {
+				} else if (lvt.t == 7 && tempT == 15) { //ㄹㅁ
 					lvt.t = 9;
-				}  //ㄹㅁ
-				else if (lvt.t == 7 && tempT == 16) {
+				} else if (lvt.t == 7 && tempT == 16) { //ㄹㅂ
 					lvt.t = 10;
-				}  //ㄹㅂ
-				else if (lvt.t == 7 && tempT == 18) {
+				} else if (lvt.t == 7 && tempT == 18) { //ㄹㅅ
 					lvt.t = 11;
-				}  //ㄹㅅ
-				else if (lvt.t == 7 && tempT == 24) {
+				} else if (lvt.t == 7 && tempT == 24) { //ㄹㅌ
 					lvt.t = 12;
-				}  //ㄹㅌ
-				else if (lvt.t == 7 && tempT == 25) {
+				} else if (lvt.t == 7 && tempT == 25) { //ㄹㅍ
 					lvt.t = 13;
-				}  //ㄹㅍ
-				else if (lvt.t == 7 && tempT == 26) {
+				} else if (lvt.t == 7 && tempT == 26) { //ㄹㅎ
 					lvt.t = 14;
-				}  //ㄹㅎ
-				else if (lvt.t == 16 && tempT == 18) {
+				} else if (lvt.t == 16 && tempT == 18) { //ㅂㅅ
 					lvt.t = 17;
-				}  //ㅂㅅ
-				else {
+				} else {
 					result += composeAndPrint(lvt);
 					lvt.l = lList.indexOf(tList[tempT]);
 				}
-				// 되면 lvtt
-				// 안되면 구워주고 초기화
-				// l로 남기기
 			}
 		} else { // 모음
 			tempV = vList.indexOf(char);
 			if (lvt.l == -1) {
 				if (lvt.v == -1) {
 					// -1,-1,-1
-					// v남기기
 					lvt.v = tempV;
 				} else {
 					// v
-					// vv 연결되나 (ㅗ8-ㅏ0/ㅐ1/ㅣ20, ㅜ13-ㅓ4/ㅔ5/ㅣ20, ㅡ18-ㅣ20)
+					// 이중모음 확인
 					let vLeft = 0;
-					if (lvt.v == 8 && tempV == 0)
+					if (lvt.v == 8 && tempV == 0) //ㅘ
 						lvt.v = 9;
-					else if (lvt.v == 8 && tempV == 1)
+					else if (lvt.v == 8 && tempV == 1) //ㅙ
 						lvt.v = 10;
-					else if (lvt.v == 8 && tempV == 20)
+					else if (lvt.v == 8 && tempV == 20) //ㅚ
 						lvt.v = 11;
-					else if (lvt.v == 13 && tempV == 4)
+					else if (lvt.v == 13 && tempV == 4) //ㅝ
 						lvt.v = 14;
-					else if (lvt.v == 13 && tempV == 5)
+					else if (lvt.v == 13 && tempV == 5) //ㅞ
 						lvt.v = 15;
-					else if (lvt.v == 13 && tempV == 20)
+					else if (lvt.v == 13 && tempV == 20) //ㅟ
 						lvt.v = 16;
-					else if (lvt.v == 18 && tempV == 20)
+					else if (lvt.v == 18 && tempV == 20) //ㅢ
 						lvt.v = 19;
 					else
 						vLeft = 1;
-					// 되면 구워주고 초기화
-					// 안되면 구워주고 초기화
-					// 새 v 남기기
 					result += composeAndPrint(lvt);
 					if (vLeft == 1) {
 						lvt.v = tempV;
@@ -338,7 +306,7 @@ function engToKor() {
 				lvt.v = tempV;
 			} else if (lvt.t == -1) {
 				// lv
-				// vv 연결되나
+				// 이중받침 확인
 				if (lvt.v == 8 && tempV == 0)
 					lvt.v = 9;
 				else if (lvt.v == 8 && tempV == 1)
@@ -357,13 +325,9 @@ function engToKor() {
 					result += composeAndPrint(lvt);
 					lvt.v = tempV;
 				}
-				// 되면 lvv 남기고
-				// 안되면 lv 구워주고 초기화
-				// 새 v남기기
 			} else {
 				// lvt
-				// tt로 분해되나 (ㄱ0-ㅅ18,ㄴ3-ㅈ21/ㅎ26,ㄹ7-ㄱ0/ㅁ15/ㅂ16/ㅅ18/ㅌ24/ㅍ25/ㅎ26,ㅂ16-ㅅ18)
-				// ㄱㅅ2, ㄴㅈ4, ㄴㅎ5, ㄹㄱ8, ㄹㅁ9, ㄹㅂ10, ㄹㅅ11, ㄹㅌ12, ㄹㅍ13, ㄹㅎ14, ㅂㅅ17
+				// 이중받침 확인
 				let tempL;
 				if (lvt.t == 2) { //ㄱㅅ
 					lvt.t = 0;
@@ -405,16 +369,8 @@ function engToKor() {
 				result += composeAndPrint(lvt);
 				lvt.l = lList.indexOf(tList[tempL]);
 				lvt.v = tempV;
-
-
-				// 분해되면 lvt 구워주고 초기화
-				// lv남기기
-				// 분해 안되면 lv 구워주고 초기화
-				// lv 남기기
 			}
 		}
-
-
 	}
 	result += composeAndPrint(lvt);
 	console.log(result);
@@ -440,6 +396,5 @@ function composeAndPrint(lvt) {
 	lvt.v = -1;
 	lvt.t = -1;
 
-	// console.log('reset after compose ' + lvt.l, lvt.v, lvt.t);
 	return result;
 }
