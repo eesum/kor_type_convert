@@ -55,16 +55,13 @@ function korToEng() {
 	let syllable;
 	for (let i = 0; i < input.length; i++) {
 		syllable = input.codePointAt(i);
-		console.log(syllable.toString(16));
 
 		let decomp = [-1, -1, -1, -1, -1];
 		let lIndex = lList.indexOf(input[i]);
 		let vIndex = vList.indexOf(input[i]);
 		let tIndex = tList.indexOf(input[i]);
-		console.log(lIndex, vIndex, tIndex);
 
 		if (syllable >= sBase && syllable < sBase + sCount) {
-			console.log(input[i] + ' is 한글 syllable');
 			//몇번째 음절인가
 			syllable -= sBase;
 			//lIndex 구하고
@@ -73,19 +70,14 @@ function korToEng() {
 			decomp[1] = Math.floor((syllable % nCount) / tCount);
 			//tIndex 구하고 -> 0이면 없는 거니까 index 계산 시 1 빼줘야 함
 			decomp[3] = (syllable % tCount) - 1;
-			console.log(decomp[3]);
 			if (!decomp[3]) { decomp[3] = -1; }
 		} else if (lIndex > -1) {
-			console.log(input[i] + ' is 한글 초성');
 			decomp[0] = lIndex;
 		} else if (vIndex > -1) {
-			console.log(input[i] + ' is 한글 중성');
 			decomp[1] = vIndex;
 		} else if (tIndex > -1) {
-			console.log(input[i] + ' is 한글 종성');
 			decomp[3] = tIndex;
 		} else {
-			console.log(input[i] + ' is 한글 아님');
 			result += input[i];
 			continue;
 		}
@@ -181,20 +173,12 @@ function mapToKey(decomp) {
 	let result = "";
 	for (let i = 0; i < decomp.length; i++) {
 		if (decomp[i] > -1) {
-			if (i === 0) {
-				console.log(decomp[i], lList[decomp[i]]);
+			if (i === 0)
 				decomp[i] = korKey.indexOf(lList[decomp[i]]);
-			}
-			else if (i > 0 && i < 3) {
-				console.log(decomp[i], vList[decomp[i]]);
+			else if (i > 0 && i < 3)
 				decomp[i] = korKey.indexOf(vList[decomp[i]]);
-			}
-			else {
-				console.log(decomp[i], tList[decomp[i]]);
+			else
 				decomp[i] = korKey.indexOf(tList[decomp[i]]);
-
-				console.log(decomp[i]);
-			}
 			result += engKey[decomp[i]];
 		}
 	}
@@ -209,14 +193,12 @@ function engToKor() {
 
 	for (let i = 0; i < input.length; i++) {
 		let keyIndex = engKey.indexOf(input[i]);
-		console.log(keyIndex);
 		let char = korKey[keyIndex];
 		if (keyIndex == -1) {
 			result += composeAndPrint(lvt);
 			result += input[i];
 		} else if (keyIndex < 19) { // 자음
 			tempL = lList.indexOf(char);
-			console.log('lIndex: ' + tempL);
 			if (lvt.l == -1) {
 				if (lvt.v == -1) {
 					// -1,-1,-1
@@ -243,29 +225,29 @@ function engToKor() {
 				// lvt
 				// 이중받침 확인
 				let tempT = tList.indexOf(char);
-				if (lvt.t == 0 && tempT == 18) { //ㄱㅅ
+				if (lvt.t == 0 && tempT == 18) //ㄱㅅ
 					lvt.t = 2;
-				} else if (lvt.t == 3 && tempT == 21) { //ㄴㅈ
+				else if (lvt.t == 3 && tempT == 21) //ㄴㅈ
 					lvt.t = 4;
-				} else if (lvt.t == 3 && tempT == 26) { //ㄴㅎ
+				else if (lvt.t == 3 && tempT == 26) //ㄴㅎ
 					lvt.t = 5;
-				} else if (lvt.t == 7 && tempT == 0) { //ㄹㄱ
+				else if (lvt.t == 7 && tempT == 0) //ㄹㄱ
 					lvt.t = 8;
-				} else if (lvt.t == 7 && tempT == 15) { //ㄹㅁ
+				else if (lvt.t == 7 && tempT == 15) //ㄹㅁ
 					lvt.t = 9;
-				} else if (lvt.t == 7 && tempT == 16) { //ㄹㅂ
+				else if (lvt.t == 7 && tempT == 16) //ㄹㅂ
 					lvt.t = 10;
-				} else if (lvt.t == 7 && tempT == 18) { //ㄹㅅ
+				else if (lvt.t == 7 && tempT == 18) //ㄹㅅ
 					lvt.t = 11;
-				} else if (lvt.t == 7 && tempT == 24) { //ㄹㅌ
+				else if (lvt.t == 7 && tempT == 24) //ㄹㅌ
 					lvt.t = 12;
-				} else if (lvt.t == 7 && tempT == 25) { //ㄹㅍ
+				else if (lvt.t == 7 && tempT == 25) //ㄹㅍ
 					lvt.t = 13;
-				} else if (lvt.t == 7 && tempT == 26) { //ㄹㅎ
+				else if (lvt.t == 7 && tempT == 26) //ㄹㅎ
 					lvt.t = 14;
-				} else if (lvt.t == 16 && tempT == 18) { //ㅂㅅ
+				else if (lvt.t == 16 && tempT == 18) //ㅂㅅ
 					lvt.t = 17;
-				} else {
+				else {
 					result += composeAndPrint(lvt);
 					lvt.l = lList.indexOf(tList[tempT]);
 				}
@@ -373,24 +355,18 @@ function engToKor() {
 		}
 	}
 	result += composeAndPrint(lvt);
-	console.log(result);
 	return result;
 }
 
 function composeAndPrint(lvt) {
 	let result = "";
-	console.log('compose ' + lvt.l, lvt.v, lvt.t);
 	if (lvt.l > -1 && lvt.v > -1) {
 		let syllable = sBase + (lvt.l * nCount) + (lvt.v * tCount) + lvt.t + 1;
-		console.log('syllable code: ' + syllable);
 		result = String.fromCodePoint(syllable);
-	} else if (lvt.l > -1 && lvt.v == -1) {
-		console.log('only l: ' + lvt.l);
+	} else if (lvt.l > -1 && lvt.v == -1)
 		result = lList[lvt.l];
-	} else if (lvt.l == -1 && lvt.v > -1) {
-		console.log('only v: ' + lvt.v);
+	else if (lvt.l == -1 && lvt.v > -1)
 		result = vList[lvt.v];
-	}
 
 	lvt.l = -1;
 	lvt.v = -1;
