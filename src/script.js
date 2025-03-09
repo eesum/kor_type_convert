@@ -21,6 +21,7 @@ radioButtons.forEach(radio => { radio.addEventListener('change', convertText); }
 radioButtons.forEach(radio => { radio.addEventListener('change', changePlaceholder); });
 inputText.addEventListener('input', convertText);
 resetButton.addEventListener('click', resetTextBox);
+outputText.addEventListener('click', copyToClipboard);
 
 function changePlaceholder() {
 	const convertOption = document.querySelector('.convertRadio:checked').id;
@@ -34,6 +35,17 @@ function changePlaceholder() {
 function resetTextBox() {
 	inputText.value = '';
 	outputText.value = '';
+}
+
+async function copyToClipboard() {
+	if (outputText.value) {
+		try {
+			await navigator.clipboard.writeText(outputText.value);
+			alert('클립보드 복사 성공!');
+		} catch (error) {
+			alert('클립보드 복사에 실패했어요\n' + error.message);
+		}
+	}
 }
 
 function convertText() {
