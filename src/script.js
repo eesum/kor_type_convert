@@ -23,8 +23,18 @@ const korKey = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐ�
 const engKey = "rRseEfaqQtTdwWczxvgkoiOjpuPhynbml";
 
 radioButtons.forEach(radio => { radio.addEventListener('change', convertText); });
+radioButtons.forEach(radio => { radio.addEventListener('change', changePlaceholder); });
 inputText.addEventListener('input', convertText);
 resetButton.addEventListener('click', resetTextBox);
+
+function changePlaceholder() {
+	const convertOption = document.querySelector('.convertRadio:checked').id;
+
+	if (convertOption === 'korToEng')
+		inputText.placeholder = "해ㅐㅇ ㅡㅐ구ㅑㅜㅎ";
+	else
+		inputText.placeholder = "dkssudgktpdy";
+}
 
 function resetTextBox() {
 	inputText.value = '';
@@ -199,41 +209,87 @@ function mapToKey(decomp) {
 function engToKor() {
 	const input = inputText.value;
 	let result = "";
-	let decomposed = "";
+
+	let lvt = [{ l: -1, v: -1, t: -1 }];
+
 	for (let i = 0; i < input.length; i++) {
-		let engIndex = engKey.indexOf(input[i]);
-		if (engIndex > -1)
-			decomposed += korKey[engKey.indexOf(input[i])];
-		else
-			decomposed += input[i];
-	}
-
-	let comp = [];
-	comp.length = decomposed.length;
-
-	for (let i = 1; i < decomposed.length; i++) {
-		// let lIndex = lList.indexOf(decomposed[i]);
-		let vIndex = vList.indexOf(decomposed[i]);
-		// let tIndex = tList.indexOf(decomposed[i]);
-
-		if (vIndex > -1) {
-			let lIndex = lList.indexOf(decomposed[i - 1]);
-			if (lIndex > -1) {
-				comp[i - 1] = 1;
-				//초성
-				comp[i] = 2;
-				//중성
+		let keyIndex = engKey.indexOf(input[i]);
+		let char = korKey[keyIndex];
+		if (keyIndex == -1) {
+			//현재 상태에서 한번 구워주고 초기화
+			result += input[i];
+		} else if (keyIndex < 19) { // 자음
+			if (lvt.l == -1) {
+				if (lvt.v == -1) {
+					// -1,-1,-1
+					lvt.l = lList.indexOf(char);
+				} else {
+					// v
+					// 한번 구워주고 초기화
+					lvt.l = lList.indexOf(char);
+				}
+			} else if (lvt.v == -1) {
+				// l
+				// 기존 걸로 구워주고 초기화
+				// 지금 걸로 구워주고 초기화
+			} else if (lvt.t == -1) {
+				// lv
+				lvt.t = tList.indexOf(char);
 			} else {
-				comp[i] = -2;
-				//버려진 중성
+				// lvt
+				// 기존 t와 연결되나
+				// 되면 lvtt
+				// 안되면 구워주고 초기화
+				// l로 남기기
 			}
-			i++;
+		} else { // 모음
+			if (lvt.l == -1) {
+				if (lvt.v == -1) {
+					// -1,-1,-1
+					// 한번 구워주고 초기화
+				} else {
+					// v
+					// vv 연결되나
+					// 되면 구워주고 초기화
+					// 안되면 구워주고 초기화
+					// 새 v 남기기
+				}
+			} else if (lvt.v == -1) {
+				// l
+				lvt.v = vList.indexOf(char);
+			} else if (lvt.t == -1) {
+				// lv
+				// vv 연결되나
+				// 되면 lvv 남기고
+				// 안되면 lv 구워주고 초기화
+				// 새 v남기기
+			} else {
+				// lvt
+				// tt로 분해되나
+				// 분해되면 lvt 구워주고 초기화
+				// lv남기기
+				// 분해 안되면 lv 구워주고 초기화
+				// lv 남기기
+			}
 		}
+
+		console.log(result);
+
+		return result;
+	}
+}
+
+function composeAndPrint(lvt) {
+	let result;
+	if (lvt.l > -1 && lvt.v > -1 && lvt.t > -1) {
+		let syllable = sBase + (lvt.l * nCount) + (lvt[1] * tCount) + lvt[2];
+		result = String.fromCodePoint(syllable);
+	} else if (lvt.v == -1) {
+		result = korKey.indexOf(lList[lvt.l]);
+	} else if (lvt.l == -1) {
+		result = korKey.indexOf(vList[lvt.v]);
 	}
 
-
-
-	console.log(result);
-
+	lvt = [{ l: -1, v: -1, t: -1 }];
 	return result;
 }
