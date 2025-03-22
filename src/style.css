@@ -93,3 +93,17 @@ input[type='radio']:checked + label {
 .textBox::placeholder {
     color: lightgray;
 }
+
+.ad-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-top: 40px;
+}
+
+.kakao_ad_area {
+    display: block;
+    text-align: center;
+}
