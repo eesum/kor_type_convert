@@ -1,0 +1,24 @@
+name: Deploy Jekyll Site with GA
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create _config.yml with GA ID
+        run: |
+          echo "google_analytics: ${{ secrets.GA_TRACKING_ID }}" > _config.yml
+
+      - name: Build Jekyll Site
+        uses: actions/jekyll-build-pages@v1
+
+      - name: Deploy to GitHub Pages
+        uses: actions/upload-pages-artifact@v2
